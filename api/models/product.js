@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-
+//ábel
 const productSchema = mongoose.Schema({
     _id: mongoose.Schema.Types.ObjectId,
     title: {type: String, required: true},

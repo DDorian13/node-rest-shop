@@ -11,24 +11,26 @@ router.get('/', (req, res, next) => {
         .select('title year author desc _id')
         .exec()
         .then(docs => {
-            const response = {
-                //count: docs.length,
-                products: docs.map(doc =>{
+
+            res.status(200).send(docs.map(doc =>{
                     return{
+                        _id: doc._id,
                         title: doc.title,
                         year: doc.year,
                         author: doc.author,
-                        desc: doc.desc,
-                        _id: doc._id
+                        desc: doc.desc
+
                         /*request:{
                             type: 'GET',
                             url:'http://localhost:3000/products/' +doc._id
                         }*/
                     }
                 })
-            };
+            )
+            ;
  //           if(docs.length>=0){
-               res.status(200).json(response);
+
+               //res.status(200).send()
 //            }else {
 //                res.status(404).json({
 //                    messages: 'No entries found'
@@ -83,8 +85,12 @@ router.get('/:productId', (req, res, next) => {
         .then(doc =>{
         //console.log(doc);
         if(doc) {
-            res.status(200).json({
-                product: doc
+            res.status(200).send({
+                _id: doc._id,
+                title: doc.title,
+                year: doc.year,
+                author: doc.author,
+                desc: doc.desc
                 /*request:{
                     type: 'GET',
                     url:'http://localhost:3000/products/' +doc._id

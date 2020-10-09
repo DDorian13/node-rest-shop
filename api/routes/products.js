@@ -3,12 +3,40 @@
 const express = require('express');
 const router = express.Router();
 const mongoose = require('mongoose');
+const multer = require('multer');
+
+
+const storage = multer.diskStorage({
+    destination: function(req, file, cb) {
+        cb(null, './uploads/');
+    },
+    filename: function(req, file, cb) {
+        const now = new Date().toISOString(); const date = now.replace(/:/g, '-'); cb(null, date + file.originalname);
+    }
+});
+
+const fileFilter = (req,file,cb)=>{
+    if(file.mimetype==='image/jpg'||file.mimetype=== 'image/png'){
+        cb(null, false);
+    }else{
+        cb(null, true);
+    }
+
+
+}
+const upload = multer({
+    storage: storage,
+    limits: {
+        fileSize: 1024 * 1024 * 5
+    },
+    fileFilter: fileFilter
+});
 
 const Product =require('../models/product');
 
 router.get('/', (req, res, next) => {
     Product.find()
-        .select('title year author desc _id')
+        .select('title year author desc _id productImage')
         .exec()
         .then(docs => {
             res.status(200).send(docs.map(doc =>{
@@ -17,7 +45,8 @@ router.get('/', (req, res, next) => {
                         title: doc.title,
                         year: doc.year,
                         author: doc.author,
-                        desc: doc.desc
+                        desc: doc.desc,
+                        productImage: doc.productImage
 
                     }
                 })
@@ -31,13 +60,14 @@ router.get('/', (req, res, next) => {
         });
 });
 
-router.post('/', (req, res, next) => {
+router.post('/',upload.single('productImage'), (req, res, next) => {
     const product = new Product({
         _id: new mongoose.Types.ObjectId(),
         title: req.body.title,
         year: req.body.year,
         author: req.body.author,
-        desc: req.body.desc
+        desc: req.body.desc,
+        productImage: req.file.path
     });
     product.save().then(result => {
         console.log(result);
@@ -66,7 +96,7 @@ router.post('/', (req, res, next) => {
 router.get('/:productId', (req, res, next) => {
     const id = req.params.productId;
     Product.findById(id)
-        .select('title year author desc _id')
+        .select('title year author desc _id productImage')
         .exec()
         .then(doc =>{
         //console.log(doc);
@@ -76,7 +106,8 @@ router.get('/:productId', (req, res, next) => {
                 title: doc.title,
                 year: doc.year,
                 author: doc.author,
-                desc: doc.desc
+                desc: doc.desc,
+                productImage: doc.productImage
                 /*request:{
                     type: 'GET',
                     url:'http://localhost:3000/products/' +doc._id

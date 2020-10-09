@@ -18,6 +18,7 @@ mongoose.connect('mongodb+srv://user1:'+process.env.MONGO_ATLAS_PW+'@cluster0.mj
 mongoose.Promise = global.Promise;
 
 app.use(morgan('dev'));
+app.use('/uploads',express.static('uploads'));
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
 

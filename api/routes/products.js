@@ -11,7 +11,6 @@ router.get('/', (req, res, next) => {
         .select('title year author desc _id')
         .exec()
         .then(docs => {
-
             res.status(200).send(docs.map(doc =>{
                     return{
                         _id: doc._id,
@@ -20,22 +19,9 @@ router.get('/', (req, res, next) => {
                         author: doc.author,
                         desc: doc.desc
 
-                        /*request:{
-                            type: 'GET',
-                            url:'http://localhost:3000/products/' +doc._id
-                        }*/
                     }
                 })
-            )
-            ;
- //           if(docs.length>=0){
-
-               //res.status(200).send()
-//            }else {
-//                res.status(404).json({
-//                    messages: 'No entries found'
-//                })
-//            }
+            );
         })
         .catch(err=>{
             console.log(err);

@@ -1,6 +1,6 @@
 import React from 'react';
 import {Show, SimpleShowLayout, TextField, NumberField} from 'react-admin';
-
+//valami
 const OrderShow = (props) => {
     return (
         <Show {...props}>

@@ -11,6 +11,7 @@ router.get('/', (req, res, next) => {
         .populate('product','title')
         .exec()
         .then(docs =>{
+            res.header('Content-Range', 'Order 0-'+docs.length+'/'+docs.length);
             res.status(200).json(docs);
         })
         .catch(err=>{

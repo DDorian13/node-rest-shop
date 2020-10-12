@@ -1,13 +1,12 @@
 import React from 'react';
-import {List, Datagrid, TextField, NumberField, EditButton, DeleteButton} from 'react-admin';
+import {List, Datagrid, TextField, NumberField, ShowButton} from 'react-admin';
 
 const OrderList = (props) => {
     return <List {...props}>
         <Datagrid>
             <TextField label = 'Title of product' source = 'product.title' />
             <NumberField source = 'quantity' />
-            <EditButton basePath = '/orders' />
-            <DeleteButton basePath = '/orders' />
+            <ShowButton basePath = '/orders'/>
         </Datagrid>
     </List>
 };

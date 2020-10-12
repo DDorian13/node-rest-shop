@@ -9,8 +9,8 @@ const ProductList = (products) => {
                 <TextField source = 'author' />
                 <TextField multiline source = 'desc' />
                 <ImageField source = 'productImage' />
-                <EditButton basePath = '/products' />
-                <DeleteButton basePath = '/products' />
+                <EditButton record = '/_id' basePath = '/products' />
+                <DeleteButton record = '/_id' basePath = '/products' />
             </Datagrid>
         </List>
 };

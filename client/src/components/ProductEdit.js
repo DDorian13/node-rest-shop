@@ -1,7 +1,7 @@
 import React from 'react';
 import {Edit, SimpleForm, TextInput, ImageInput, NumberInput} from 'react-admin';
 
-const ProductCreate = (props) => {
+const ProductEdit = (props) => {
     return (
         <Edit title = 'Edit Product' {...props}>
             <SimpleForm>
@@ -16,4 +16,4 @@ const ProductCreate = (props) => {
     )
 };
 
-export default ProductCreate;
+export default ProductEdit;

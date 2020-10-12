@@ -39,6 +39,7 @@ router.get('/', (req, res, next) => {
         .select('title year author desc _id productImage')
         .exec()
         .then(docs => {
+            res.header('Content-Range', 'Product 0-'+docs.length+'/'+docs.length);
             res.status(200).send(docs.map(doc =>{
                     return{
                         _id: doc._id,

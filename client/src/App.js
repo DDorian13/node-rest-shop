@@ -6,7 +6,7 @@ import ProductCreate from './components/ProductCreate';
 import ProductEdit from './components/ProductEdit';
 import OrderList from './components/OrderList';
 import OrderCreate from './components/OrderCreate';
-import OrderEdit from './components/OrderEdit';
+import OrderShow from './components/OrderShow';
 
 function App() {
   return <Admin dataProvider={restProvider('http://localhost:5000')}>
@@ -15,7 +15,7 @@ function App() {
                 edit = {ProductEdit}/>
       <Resource name='orders' list={OrderList}
                 create = {OrderCreate}
-                edit = {OrderEdit}/>
+                show = {OrderShow}/>
       </Admin>
       ;
 }

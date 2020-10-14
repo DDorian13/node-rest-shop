@@ -1,5 +1,5 @@
 import React from 'react';
-import {List, Datagrid, TextField, NumberField, ShowButton} from 'react-admin';
+import {List, Datagrid, TextField, NumberField, ShowButton, DeleteButton} from 'react-admin';
 
 const OrderList = (props) => {
     return <List {...props}>
@@ -7,6 +7,7 @@ const OrderList = (props) => {
             <TextField label = 'Title of product' source = 'product.title' />
             <NumberField source = 'quantity' />
             <ShowButton basePath = '/orders'/>
+            <DeleteButton basePath = '/orders'/>
         </Datagrid>
     </List>
 };

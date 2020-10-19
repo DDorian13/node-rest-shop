@@ -5,7 +5,7 @@ const OrderShow = (props) => {
     return (
         <Show {...props}>
             <SimpleShowLayout>
-                <TextField source='_id' />
+                <TextField source='id' />
                 <TextField source='product.title' />
                 <NumberField source='quantity' />
             </SimpleShowLayout>

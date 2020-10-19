@@ -6,7 +6,7 @@ const productSchema = mongoose.Schema({
     year: {type: String, required: true},
     author: {type: String, required: true},
     desc: {type: String, required: true},
-    productImage: {type: String, required: false}
+    productImage: {type: String, required: true}
 });
 
 module.exports = mongoose.model('Product',productSchema)

@@ -1,5 +1,5 @@
 import React from 'react';
-import {Create, SimpleForm, TextInput, ImageInput, NumberInput} from 'react-admin';
+import {Create, SimpleForm, TextInput, FileInput, ImageField, NumberInput} from 'react-admin';
 
 const ProductCreate = (props) => {
     return (
@@ -9,7 +9,9 @@ const ProductCreate = (props) => {
                 <NumberInput label = 'year' source='year' />
                 <TextInput source='author' />
                 <TextInput multiline source='desc' />
-                <ImageInput label = 'Image of Product' source='productImage' />
+                <FileInput label = 'Image of Product' source='productImage'>
+                           <ImageField source='productImage'/>
+                </FileInput>
             </SimpleForm>
         </Create>
     )

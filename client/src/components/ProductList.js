@@ -1,7 +1,7 @@
 import React from 'react';
 import {List, Datagrid, TextField, NumberField, ImageField, EditButton, DeleteButton} from 'react-admin';
 
-const ProductList = (props) => {
+const ProductList = ({permissions, ...props}) => {
     return <List {...props}>
             <Datagrid>
                 <TextField source = 'title' />

@@ -12,7 +12,7 @@ import MyLoginPage from "./MyLoginPage";
 
 const httpClient = (url, options = {}) => {
     if (!options.headers) {
-        options.headers = new Headers({ Accept: 'application/json' });
+        options.headers = new Headers({ Accept: '*/*' });
     }
     const token = JSON.parse(localStorage.getItem('token'));
     options.headers.set('Authorization', `Bearer ${token}`);
@@ -25,7 +25,7 @@ const customKeysHash = {
     'users': '_id'
 }
 
-const dataProvider = customKeysDataProvider('http://localhost:5000', customKeysHash, null, httpClient);
+const dataProvider = customKeysDataProvider('http://localhost:5000', customKeysHash, {}, httpClient);
 
 function App() {
     return <Admin authProvider={authProvider} dataProvider={dataProvider}>

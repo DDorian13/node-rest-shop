@@ -1,6 +1,6 @@
 import React from 'react';
-import { Admin, Resource, fetchUtils } from 'react-admin';
-import customKeysDataProvider from 'ra-data-rest-client';
+import { Admin, Resource } from 'react-admin';
+import myDataProvider from "./addUploadFeature";
 import ProductList from './components/ProductList';
 import ProductCreate from './components/ProductCreate';
 import ProductEdit from './components/ProductEdit';
@@ -10,25 +10,8 @@ import OrderShow from './components/OrderShow';
 import authProvider from "./authentication/authProvider";
 import MyLoginPage from "./MyLoginPage";
 
-const httpClient = (url, options = {}) => {
-    if (!options.headers) {
-        options.headers = new Headers({ Accept: '*/*' });
-    }
-    const token = JSON.parse(localStorage.getItem('token'));
-    options.headers.set('Authorization', `Bearer ${token}`);
-    return fetchUtils.fetchJson(url, options);
-};
-
-const customKeysHash = {
-    'products': '_id',
-    'orders': '_id',
-    'users': '_id'
-}
-
-const dataProvider = customKeysDataProvider('http://localhost:5000', customKeysHash, {}, httpClient);
-
 function App() {
-    return <Admin authProvider={authProvider} dataProvider={dataProvider}>
+    return <Admin authProvider={authProvider} dataProvider={myDataProvider}>
         {permissions => [
         <Resource name='products'
                   list={ProductList}

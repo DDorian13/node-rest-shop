@@ -8,6 +8,7 @@ const checkAuth = require('../middleware/check-auth');
 const storage = multer.diskStorage({
     destination: function(req, file, cb) {
         cb(null, './uploads/');
+        console.log(file.originalname);
     },
     filename: function(req, file, cb) {
         const now = new Date().toISOString(); const date = now.replace(/:/g, '-'); cb(null, date + file.originalname);
@@ -60,15 +61,16 @@ router.get('/', (req, res, next) => {
         });
 });
 
-router.post('/'/*,checkAuth*/,upload.single('productImage'), (req, res, next) => {
+router.post('/'/*,checkAuth*/, upload.single('productImage'), (req, res, next) => {
     const product = new Product({
         _id: new mongoose.Types.ObjectId(),
         title: req.body.title,
         year: req.body.year,
         author: req.body.author,
-        desc: req.body.desc,
-        productImage: req.file.path
+        desc: req.body.desc
     });
+    if (req.file !== undefined)
+        product.productImage = req.file.path;
     product.save().then(result => {
         console.log(result);
         res.status(201).json({

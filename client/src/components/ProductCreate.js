@@ -6,11 +6,11 @@ const ProductCreate = (props) => {
         <Create title = 'New Product' {...props}>
             <SimpleForm>
                 <TextInput source='title' />
-                <NumberInput label = 'year' source='year' />
+                <NumberInput source='year' />
                 <TextInput source='author' />
-                <TextInput multiline source='desc' />
+                <TextInput multiline label='Description' source='desc' />
                 <ImageInput label = 'Image of Product' source='productImage'>
-                           <ImageField source='productImage'/>
+                           <ImageField source='src'/>
                 </ImageInput>
             </SimpleForm>
         </Create>

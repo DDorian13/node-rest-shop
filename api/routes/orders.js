@@ -9,7 +9,7 @@ const checkAuth = require('../middleware/check-auth');
 router.get('/'/*,checkAuth*/,(req, res, next) => {
     Order.find()
         .select('product quantity _id')
-        .populate('product','title')
+        .populate('product', 'productImage title')
         .exec()
         .then(docs =>{
             res.header('Content-Range', 'Order 0-'+docs.length+'/'+docs.length);

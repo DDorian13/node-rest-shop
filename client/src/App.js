@@ -30,7 +30,7 @@ const customKeysHash = {
 }
 
 const dataProvider = customKeysDataProvider('http://localhost:5000', customKeysHash, {}, httpClient);
-//const udataProvider = addUploadFeature(dataProvider);
+//const uDataProvider = addUploadFeature(dataProvider);
 //-------------------
 
 function App() {

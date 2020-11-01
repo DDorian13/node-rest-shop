@@ -48,7 +48,6 @@ router.get('/', (req, res, next) => {
                         author: doc.author,
                         desc: doc.desc,
                         productImage: doc.productImage
-
                     }
                 })
             );

@@ -9,7 +9,8 @@ const ProductCreate = (props) => {
                 <NumberInput source='year' />
                 <TextInput source='author' />
                 <TextInput multiline label='Description' source='desc' />
-                <ImageInput label = 'Image of Product' source='productImage'>
+                <ImageInput label = 'Image of Product'
+                            source='productImage'>
                            <ImageField source='src'/>
                 </ImageInput>
             </SimpleForm>

@@ -2,14 +2,14 @@ const express = require('express');
 const router = express.Router();
 const mongoose = require('mongoose')
 
-const Category =require('../photo_models/category');
+const Competition =require('../photo_models/competition');
 const User =require('../photo_models/user');
 const Photo =require('../photo_models/photo');
 const checkAuth = require('../middleware/check-auth');
 
 router.get('/'/*,checkAuth*/,(req, res, next) => {
-    Category.find()
-        .select('name visibility creator limit')
+    Competition.find()
+        .select('name deadline creator')
         .exec()
         .then(docs =>{
             res.header('Content-Range', 'Order 0-'+docs.length+'/'+docs.length);
@@ -22,16 +22,14 @@ router.get('/'/*,checkAuth*/,(req, res, next) => {
         });
 });
 
-router.get('/:categoryId', (req, res, next) => {
-    Category.findById(req.params.categoryId)
-        .select('name visibility creator limit photoList')
-        .populate('photoList', 'title ownImage')
+router.get('/:competitionId', (req, res, next) => {
+    Competition.findById(req.params.competitionId)
+        .select('name deadline creator photoList')
+        .populate('photoList', 'title ownImage likes')
         .exec()
+        .sort('photoList.likes')
         .then(doc => {
-            if(req.userData._id === doc.creator || doc.visibility) {
-                res.status(200).json(doc);
-            } else
-                res.status(404).json({messages: 'No valid entry found for provided ID'})
+            res.status(200).json(doc);
         })
         .catch(err=> {
             console.log(err);
@@ -47,14 +45,13 @@ router.post('/', (req, res, next) => {
                     message: "Creator not found"
                 });
             }
-            const category = new Category({
+            const competition = new Competition({
                 _id: mongoose.Types.ObjectId(),
                 name: req.body.name,
                 creator: req.body.userId,
-                visibility: req.body.visibility,
-                limit: req.body.limit
+                deadline: req.body.deadline
             });
-            return category.save()
+            return competition.save()
         })
         .then(result => {
             console.log(result);
@@ -68,8 +65,8 @@ router.post('/', (req, res, next) => {
         });
 });
 
-router.patch('/:categoryId'/*,checkAuth*/,(req, res, next) => {
-    const id = req.params.categoryId;
+router.patch('/:competitionId'/*,checkAuth*/,(req, res, next) => {
+    const id = req.params.competitionId;
     const updateOps={};
     for (const ops of req.body){
         if (ops.propName === 'photoList')
@@ -77,11 +74,11 @@ router.patch('/:categoryId'/*,checkAuth*/,(req, res, next) => {
         else
             updateOps[ops.propName] = ops.value
     }
-    Photo.update({_id: id},{ $set: updateOps})
+    Competition.update({_id: id},{ $set: updateOps})
         .exec()
         .then(result=>{
             res.status(200).json({
-                message: 'Category updated'
+                message: 'Competition updated'
             });
         })
         .catch(err =>{
@@ -92,12 +89,12 @@ router.patch('/:categoryId'/*,checkAuth*/,(req, res, next) => {
         });
 });
 
-router.delete('/:categoryId', (req, res, next) => {
-    Category.remove({_id: req.params.categoryId})
+router.delete('/:competitionId', (req, res, next) => {
+    Competition.remove({_id: req.params.competitionId})
         .exec()
         .then(result=>{
             res.status(200).json({
-                message: 'Category deleted'
+                message: 'Competition deleted'
             });
         })
         .catch(err =>{

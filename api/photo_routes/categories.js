@@ -77,7 +77,7 @@ router.patch('/:categoryId'/*,checkAuth*/,(req, res, next) => {
         else
             updateOps[ops.propName] = ops.value
     }
-    Photo.update({_id: id},{ $set: updateOps})
+    Category.update({_id: id},{ $set: updateOps})
         .exec()
         .then(result=>{
             res.status(200).json({

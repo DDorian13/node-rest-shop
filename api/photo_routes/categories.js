@@ -10,6 +10,7 @@ const checkAuth = require('../middleware/check-auth');
 router.get('/'/*,checkAuth*/,(req, res, next) => {
     Category.find()
         .select('name visibility creator limit')
+        .populate('creator', 'email')
         .exec()
         .then(docs =>{
             res.header('Content-Range', 'Order 0-'+docs.length+'/'+docs.length);
@@ -26,6 +27,7 @@ router.get('/:categoryId', (req, res, next) => {
     Category.findById(req.params.categoryId)
         .select('name visibility creator limit photoList')
         .populate('photoList', 'title ownImage')
+        .populate('creator', 'email')
         .exec()
         .then(doc => {
             if(req.userData._id === doc.creator || doc.visibility) {
@@ -39,8 +41,8 @@ router.get('/:categoryId', (req, res, next) => {
         });
 });
 
-router.post('/', (req, res, next) => {
-    User.findById(req.body.userId)
+router.post('/', checkAuth, (req, res, next) => {
+    User.findById(req.body.creator)
         .then(user => {
             if(!user){
                 return res.status(404).json({
@@ -50,7 +52,7 @@ router.post('/', (req, res, next) => {
             const category = new Category({
                 _id: mongoose.Types.ObjectId(),
                 name: req.body.name,
-                creator: req.body.userId,
+                creator: req.body.creator,
                 visibility: req.body.visibility,
                 limit: req.body.limit
             });
@@ -58,7 +60,9 @@ router.post('/', (req, res, next) => {
         })
         .then(result => {
             console.log(result);
-            res.status(201).json(result);
+            res.status(201).json({
+                message: "Category created successfully"
+            });
         })
         .catch(err =>{
             console.log(err);
@@ -107,3 +111,5 @@ router.delete('/:categoryId', (req, res, next) => {
            })
        });
 });
+
+module.exports = router;

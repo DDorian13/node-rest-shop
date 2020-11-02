@@ -6,7 +6,7 @@ const jwt = require('jsonwebtoken');
 
 const Users =require("../models/user");
 
-router.post("/signup", (req, res, next) => {
+router.post("/signupp", (req, res, next) => {
     Users.find({ email: req.body.email })
         .exec()
         .then(user => {
@@ -46,7 +46,7 @@ router.post("/signup", (req, res, next) => {
         });
 });
 
-router.post('/login',(req,res,next)=>{
+router.post('/loginn',(req,res,next)=>{
     Users.find({email: req.body.email})
         .exec()
         .then(user => {

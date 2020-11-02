@@ -9,6 +9,13 @@ const productRoutes = require('./api/routes/products');
 const orderRoutes = require('./api/routes/orders');
 const userRoutes = require('./api/routes/users');
 
+//---------------------------
+const categoryRoutes = require('./api/photo_routes/categories');
+const competitionRoutes = require('./api/photo_routes/competitions');
+const photoRoutes = require('./api/photo_routes/photos');
+const pUserRoutes = require('./api/photo_routes/users');
+//---------------------------
+
 mongoose.connect('mongodb+srv://user1:'+process.env.MONGO_ATLAS_PW+'@cluster0.mj4rz.mongodb.net/pp?retryWrites=true&w=majority',
     {
         useNewUrlParser: true,
@@ -39,6 +46,13 @@ app.use((req, res, next) => {
 app.use('/products', productRoutes);
 app.use('/orders', orderRoutes);
 app.use('/user', userRoutes);
+
+//---------------------------
+app.use('/categories', categoryRoutes);
+app.use('/competitions', competitionRoutes);
+app.use('/photos', photoRoutes);
+app.use('/puser', pUserRoutes)
+//---------------------------
 
 app.use((req, res, next) => {
     const error = new Error('Not found');

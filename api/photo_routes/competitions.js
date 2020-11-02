@@ -104,3 +104,5 @@ router.delete('/:competitionId', (req, res, next) => {
             })
         });
 });
+
+module.exports = router;

@@ -7,7 +7,7 @@ const User =require('../photo_models/user');
 const Photo =require('../photo_models/photo');
 const checkAuth = require('../middleware/check-auth');
 
-router.get('/'/*,checkAuth*/,(req, res, next) => {
+router.get('/', checkAuth,(req, res, next) => {
     Competition.find()
         .select('name deadline creator')
         .exec()
@@ -22,7 +22,7 @@ router.get('/'/*,checkAuth*/,(req, res, next) => {
         });
 });
 
-router.get('/:competitionId', (req, res, next) => {
+router.get('/:competitionId', checkAuth, (req, res, next) => {
     Competition.findById(req.params.competitionId)
         .select('name deadline creator photoList')
         .populate('photoList', 'title ownImage likes')
@@ -37,8 +37,8 @@ router.get('/:competitionId', (req, res, next) => {
         });
 });
 
-router.post('/', (req, res, next) => {
-    User.findById(req.body.userId)
+router.post('/', checkAuth, (req, res, next) => {
+    User.findById(req.userData.userId)
         .then(user => {
             if(!user){
                 return res.status(404).json({
@@ -48,7 +48,7 @@ router.post('/', (req, res, next) => {
             const competition = new Competition({
                 _id: mongoose.Types.ObjectId(),
                 name: req.body.name,
-                creator: req.body.userId,
+                creator: req.userData.userId,
                 deadline: req.body.deadline
             });
             return competition.save()
@@ -65,16 +65,17 @@ router.post('/', (req, res, next) => {
         });
 });
 
-router.patch('/:competitionId'/*,checkAuth*/,(req, res, next) => {
+router.patch('/:competitionId', checkAuth, (req, res, next) => {
     const id = req.params.competitionId;
     const updateOps={};
+    const updateOpsArray={};
     for (const ops of req.body){
         if (ops.propName === 'photoList')
-            updateOps[ops.propName] += ops.value
+            updateOpsArray[ops.propName] = ops.value
         else
             updateOps[ops.propName] = ops.value
     }
-    Competition.update({_id: id},{ $set: updateOps})
+    Competition.update({_id: id},{ $set: updateOps, $addToSet: updateOpsArray})
         .exec()
         .then(result=>{
             res.status(200).json({
@@ -89,7 +90,7 @@ router.patch('/:competitionId'/*,checkAuth*/,(req, res, next) => {
         });
 });
 
-router.delete('/:competitionId', (req, res, next) => {
+router.delete('/:competitionId', checkAuth, (req, res, next) => {
     Competition.remove({_id: req.params.competitionId})
         .exec()
         .then(result=>{

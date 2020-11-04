@@ -1,41 +1,12 @@
 const express = require('express');
 const router = express.Router();
 const mongoose = require('mongoose');
-const multer = require('multer');
+const upload = require('../middleware/uploadImage');
 const checkAuth = require('../middleware/check-auth');
-
-
-const storage = multer.diskStorage({
-    destination: function(req, file, cb) {
-        cb(null, './uploads/');
-        console.log(file.originalname);
-    },
-    filename: function(req, file, cb) {
-        const now = new Date().toISOString(); const date = now.replace(/:/g, '-'); cb(null, date + file.originalname);
-    }
-});
-
-const fileFilter = (req,file,cb)=>{
-    if(file.mimetype==='image/jpg'||file.mimetype=== 'image/png' || file.mimetype === 'image/jpeg'){
-        cb(null, true);
-    }else{
-        cb(null, false);
-    }
-
-
-}
-const upload = multer({
-    storage: storage,
-    limits: {
-        fileSize: 1024 * 1024 * 5
-    },
-    fileFilter: fileFilter
-});
-
 const Photo =require('../photo_models/photo');
 const User =require('../photo_models/user');
 
-router.get('/', (req, res, next) => {
+router.get('/', checkAuth, (req, res, next) => {
     Photo.find()
         .select('_id title likes ownImage ownerID')
         .populate('ownerID', 'email')
@@ -61,8 +32,8 @@ router.get('/', (req, res, next) => {
         });
 });
 
-router.post('/'/*,checkAuth*/, upload.single('ownImage'), (req, res, next) => {
-    User.findById(req.body.ownerID)
+router.post('/', checkAuth, upload.single('ownImage'), (req, res, next) => {
+    User.findById(req.userData.userId)
         .then(product => {
             if(!product){
                 return res.status(404).json({
@@ -72,7 +43,7 @@ router.post('/'/*,checkAuth*/, upload.single('ownImage'), (req, res, next) => {
             const photo = new Photo({
                 _id: new mongoose.Types.ObjectId(),
                 title: req.body.title,
-                ownerID: req.body.ownerID,
+                ownerID: req.userData.userId,
             });
             if (req.file !== undefined)
                 photo.ownImage = req.file.path;
@@ -92,11 +63,11 @@ router.post('/'/*,checkAuth*/, upload.single('ownImage'), (req, res, next) => {
         });
 });
 
-router.get('/:photoId', (req, res, next) => {
+router.get('/:photoId', checkAuth, (req, res, next) => {
     const id = req.params.photoId;
     Photo.findById(id)
         .select('_id title ownImage likes commentID ownerID upload categoryID competitionID')
-        .populate('commentID', 'user text')
+        //.populate('commentID', 'user text')
         .populate('user', 'email')
         .populate('ownerID', 'email')
         .populate('categoryID', 'name')
@@ -116,16 +87,17 @@ router.get('/:photoId', (req, res, next) => {
         });
 });
 
-router.patch('/:photoId'/*,checkAuth*/,(req, res, next) => {
+router.patch('/:photoId', checkAuth,(req, res, next) => {
     const id = req.params.photoId;
     const updateOps={};
+    const updateOpsArray={};
     for (const ops of req.body){
         if (ops.propName === 'categoryID' || ops.propName === 'commentID' || ops.propName === 'competitionID')
-            updateOps[ops.propName] += ops.value
+            updateOpsArray[ops.propName] = (ops.value)
         else
             updateOps[ops.propName] = ops.value
     }
-    Photo.update({_id: id},{ $set: updateOps})
+    Photo.update({_id: id},{ $addToSet: updateOpsArray, $set: updateOps})
         .exec()
         .then(result=>{
             res.status(200).json({
@@ -140,7 +112,7 @@ router.patch('/:photoId'/*,checkAuth*/,(req, res, next) => {
         });
 });
 
-router.delete('/:photoId'/*,checkAuth*/,(req, res, next) => {
+router.delete('/:photoId', checkAuth, (req, res, next) => {
     const id = req.params.photoId;
     Photo.remove({_id: id})
         .exec()

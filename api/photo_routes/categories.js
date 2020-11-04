@@ -5,6 +5,7 @@ const mongoose = require('mongoose')
 const Category =require('../photo_models/category');
 const User =require('../photo_models/user');
 const Photo =require('../photo_models/photo');
+const upload=require('../middleware/uploadImage')
 const checkAuth = require('../middleware/check-auth');
 
 router.get('/'/*,checkAuth*/,(req, res, next) => {
@@ -23,17 +24,21 @@ router.get('/'/*,checkAuth*/,(req, res, next) => {
         });
 });
 
-router.get('/:categoryId', (req, res, next) => {
+router.get('/:categoryId', checkAuth, (req, res, next) => {
     Category.findById(req.params.categoryId)
         .select('name visibility creator limit photoList')
         .populate('photoList', 'title ownImage')
-        .populate('creator', 'email')
+        .populate('creator', '_id email')
         .exec()
         .then(doc => {
-            if(req.userData._id === doc.creator || doc.visibility) {
+            if(doc.visibility || req.userData.userId == doc.creator._id) {
                 res.status(200).json(doc);
             } else
-                res.status(404).json({messages: 'No valid entry found for provided ID'})
+                res.status(404).json({
+                    messages: 'No valid entry found for provided ID',
+                    creatorID: doc.creator._id,
+                    signedInID: req.userData.userId
+                })
         })
         .catch(err=> {
             console.log(err);
@@ -42,7 +47,7 @@ router.get('/:categoryId', (req, res, next) => {
 });
 
 router.post('/', checkAuth, (req, res, next) => {
-    User.findById(req.body.creator)
+    User.findById(req.userData.userId)
         .then(user => {
             if(!user){
                 return res.status(404).json({
@@ -52,7 +57,7 @@ router.post('/', checkAuth, (req, res, next) => {
             const category = new Category({
                 _id: mongoose.Types.ObjectId(),
                 name: req.body.name,
-                creator: req.body.creator,
+                creator: req.userData.userId,
                 visibility: req.body.visibility,
                 limit: req.body.limit
             });
@@ -72,16 +77,17 @@ router.post('/', checkAuth, (req, res, next) => {
         });
 });
 
-router.patch('/:categoryId'/*,checkAuth*/,(req, res, next) => {
+router.patch('/:categoryId'/*,checkAuth*/, (req, res, next) => {
     const id = req.params.categoryId;
     const updateOps={};
+    const updateOpsArray={};
     for (const ops of req.body){
         if (ops.propName === 'photoList')
-            updateOps[ops.propName] += ops.value
+            updateOpsArray[ops.propName] = ops.value
         else
             updateOps[ops.propName] = ops.value
     }
-    Category.update({_id: id},{ $set: updateOps})
+    Category.update({_id: id},{ $set: updateOps, $addToSet: updateOpsArray})
         .exec()
         .then(result=>{
             res.status(200).json({

@@ -25,9 +25,8 @@ router.get('/', checkAuth,(req, res, next) => {
 router.get('/:competitionId', checkAuth, (req, res, next) => {
     Competition.findById(req.params.competitionId)
         .select('name deadline creator photoList')
-        .populate('photoList', 'title ownImage likes')
+        .populate({path:'photoList', select: 'title ownImage likes', options: {sort: {likes: -1}}})
         .exec()
-        .sort('photoList.likes')
         .then(doc => {
             res.status(200).json(doc);
         })

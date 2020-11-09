@@ -6,7 +6,7 @@ const photoSchema = mongoose.Schema({
     title: {type: String, required: true},
     likes: {type: Number, default: 0},
     upload: {type: Date, default: Date.now()},
-    commentID: [{user: {type : mongoose.SchemaTypes.ObjectID, ref: 'User', required: true},
+    comment: [{user: {type : mongoose.SchemaTypes.ObjectID, ref: 'User', required: false},
             text: {type: String, required: true}}],
     ownerID: {type : mongoose.SchemaTypes.ObjectID, ref: 'User', required: true},
     competitionID: [{type : mongoose.SchemaTypes.ObjectID, ref: 'Competition', required: false}],

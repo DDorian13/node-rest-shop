@@ -7,12 +7,15 @@ const User =require('../photo_models/user');
 const Photo =require('../photo_models/photo');
 const checkAuth = require('../middleware/check-auth');
 
-router.get('/', checkAuth,(req, res, next) => {
+router.get('/', checkAuth, (req, res, next) => {
     Competition.find()
         .select('name deadline creator')
+        .populate('creator', 'email')
         .exec()
         .then(docs =>{
-            res.header('Content-Range', 'Order 0-'+docs.length+'/'+docs.length);
+            res.header('Content-Range', 'Competition 0-' + docs.length + '/' + docs.length);
+            docs.forEach(doc =>
+                doc.currentVisibility = (req.userData.userId == doc.creator._id || doc.VIP.includes(req.userData.userId)))
             res.status(200).json(docs);
         })
         .catch(err=>{
@@ -28,6 +31,7 @@ router.get('/:competitionId', checkAuth, (req, res, next) => {
         .populate({path:'photoList', select: 'title ownImage likes', options: {sort: {likes: -1}}})
         .exec()
         .then(doc => {
+            doc.currentVisibility = (req.userData.userId == doc.creator._id || doc.VIP.includes(req.userData.userId))
             res.status(200).json(doc);
         })
         .catch(err=> {
@@ -69,24 +73,34 @@ router.patch('/:competitionId', checkAuth, (req, res, next) => {
     const updateOps={};
     const updateOpsArray={};
     for (const ops of req.body){
-        if (ops.propName === 'photoList')
+        if (ops.propName === 'photoList' || ops.propName === 'VIP')
             updateOpsArray[ops.propName] = ops.value
         else
             updateOps[ops.propName] = ops.value
     }
-    Competition.update({_id: id},{ $set: updateOps, $addToSet: updateOpsArray})
+    Competition.findById(id)
         .exec()
-        .then(result=>{
-            res.status(200).json({
-                message: 'Competition updated'
-            });
+        .then(doc => {
+            if (doc.currentVisibility) {
+                Competition.update({_id: id}, {$set: updateOps, $addToSet: updateOpsArray})
+                    .exec()
+                    .then(result => {
+                        res.status(200).json({
+                            message: 'Competition updated'
+                        });
+                    })
+                    .catch(err => {
+                        console.log(err);
+                        res.status(500).json({
+                            error: err
+                        })
+                    });
+            } else {
+                res.status(403).json({
+                    message: "Access not permitted"
+                })
+            }
         })
-        .catch(err =>{
-            console.log(err);
-            res.status(500).json({
-                error: err
-            })
-        });
 });
 
 router.delete('/:competitionId', checkAuth, (req, res, next) => {

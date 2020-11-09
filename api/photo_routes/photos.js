@@ -66,12 +66,12 @@ router.post('/', checkAuth, upload.single('ownImage'), (req, res, next) => {
 router.get('/:photoId', checkAuth, (req, res, next) => {
     const id = req.params.photoId;
     Photo.findById(id)
-        .select('_id title ownImage likes commentID ownerID upload categoryID competitionID')
-        //.populate('commentID', 'user text')
-        .populate('user', 'email')
+        .select('_id title ownImage likes comment ownerID upload categoryID competitionID')
+        .populate('comment', 'user text')
         .populate('ownerID', 'email')
         .populate('categoryID', 'name')
         .populate('competitionID', 'name')
+        .populate('comment.user', 'email')
         .exec()
         .then(doc =>{
             if(doc) {
@@ -92,7 +92,10 @@ router.patch('/:photoId', checkAuth,(req, res, next) => {
     const updateOps={};
     const updateOpsArray={};
     for (const ops of req.body){
-        if (ops.propName === 'categoryID' || ops.propName === 'commentID' || ops.propName === 'competitionID')
+        if (ops.propName === 'comment') {
+            ops.value.user = req.userData.userId
+        }
+        if (ops.propName === 'categoryID' || ops.propName === 'comment' || ops.propName === 'competitionID')
             updateOpsArray[ops.propName] = (ops.value)
         else
             updateOps[ops.propName] = ops.value

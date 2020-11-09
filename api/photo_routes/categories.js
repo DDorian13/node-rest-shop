@@ -35,9 +35,7 @@ router.get('/:categoryId', checkAuth, (req, res, next) => {
                 res.status(200).json(doc);
             } else
                 res.status(404).json({
-                    messages: 'No valid entry found for provided ID',
-                    creatorID: doc.creator._id,
-                    signedInID: req.userData.userId
+                    message: 'No valid entry found for provided ID'
                 })
         })
         .catch(err=> {

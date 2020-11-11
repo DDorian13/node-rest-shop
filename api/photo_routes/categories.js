@@ -79,12 +79,11 @@ router.patch('/:categoryId'/*,checkAuth*/, (req, res, next) => {
     const id = req.params.categoryId;
     const updateOps={};
     const updateOpsArray={};
-    for (const ops of req.body){
-        if (ops.propName === 'photoList')
-            updateOpsArray[ops.propName] = ops.value
-        else
-            updateOps[ops.propName] = ops.value
-    }
+    const ops = req.body
+    if (ops.propName === 'photoList')
+        updateOpsArray[ops.propName] = ops.value;
+    else
+        updateOps[ops.propName] = ops.value;
     Category.update({_id: id},{ $set: updateOps, $addToSet: updateOpsArray})
         .exec()
         .then(result=>{

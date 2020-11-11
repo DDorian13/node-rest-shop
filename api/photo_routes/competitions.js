@@ -72,12 +72,11 @@ router.patch('/:competitionId', checkAuth, (req, res, next) => {
     const id = req.params.competitionId;
     const updateOps={};
     const updateOpsArray={};
-    for (const ops of req.body){
-        if (ops.propName === 'photoList' || ops.propName === 'VIP')
-            updateOpsArray[ops.propName] = ops.value
-        else
-            updateOps[ops.propName] = ops.value
-    }
+    const ops = req.body
+    if (ops.propName === 'photoList' || ops.propName === 'VIP')
+        updateOpsArray[ops.propName] = ops.value;
+    else
+        updateOps[ops.propName] = ops.value;
     Competition.findById(id)
         .exec()
         .then(doc => {
@@ -101,6 +100,12 @@ router.patch('/:competitionId', checkAuth, (req, res, next) => {
                 })
             }
         })
+        .catch(err =>{
+            console.log(err);
+            res.status(500).json({
+                error: err
+            });
+        });
 });
 
 router.delete('/:competitionId', checkAuth, (req, res, next) => {

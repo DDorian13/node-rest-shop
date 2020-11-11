@@ -91,14 +91,15 @@ router.patch('/:photoId', checkAuth,(req, res, next) => {
     const id = req.params.photoId;
     const updateOps={};
     const updateOpsArray={};
-    for (const ops of req.body){
-        if (ops.propName === 'comment') {
-            ops.value.user = req.userData.userId
-        }
-        if (ops.propName === 'categoryID' || ops.propName === 'comment' || ops.propName === 'competitionID')
-            updateOpsArray[ops.propName] = (ops.value)
-        else
-            updateOps[ops.propName] = ops.value
+    const ops = req.body;
+    if (ops.propName === 'comment') {
+        ops.value.user = req.userData.userId;
+    }
+    if (ops.propName === 'categoryID' || ops.propName === 'comment' || ops.propName === 'competitionID') {
+        updateOpsArray[ops.propName] = (ops.value);
+    }
+    else {
+        updateOps[ops.propName] = ops.value;
     }
     Photo.update({_id: id},{ $addToSet: updateOpsArray, $set: updateOps})
         .exec()

@@ -6,16 +6,17 @@ const Competition =require('../photo_models/competition');
 const User =require('../photo_models/user');
 const Photo =require('../photo_models/photo');
 const checkAuth = require('../middleware/check-auth');
+const compVisib = require('../middleware/comp-visib');
 
 router.get('/', checkAuth, (req, res, next) => {
     Competition.find()
-        .select('name deadline creator')
+        .select('name deadline creator currentVisibility')
         .populate('creator', 'email')
         .exec()
         .then(docs =>{
             res.header('Content-Range', 'Competition 0-' + docs.length + '/' + docs.length);
             docs.forEach(doc => {
-                doc.currentVisibility = (req.userData.userId == doc.creator._id || (doc.VIP != null && doc.VIP.includes(req.userData.userId)));
+                doc.currentVisibility = compVisib(doc, req);
             })
             res.status(200).json(docs);
         })
@@ -28,11 +29,12 @@ router.get('/', checkAuth, (req, res, next) => {
 
 router.get('/:competitionId', checkAuth, (req, res, next) => {
     Competition.findById(req.params.competitionId)
-        .select('name deadline creator photoList')
+        .select('name deadline creator photoList currentVisibility')
         .populate({path:'photoList', select: 'title ownImage likes', options: {sort: {likes: -1}}})
+        .populate('creator', 'email')
         .exec()
         .then(doc => {
-            doc.currentVisibility = (req.userData.userId == doc.creator._id || (doc.VIP != null && doc.VIP.includes(req.userData.userId)));
+            doc.currentVisibility = compVisib(doc, req);
             res.status(200).json(doc);
         })
         .catch(err=> {
@@ -81,9 +83,8 @@ router.patch('/:competitionId', checkAuth, (req, res, next) => {
     Competition.findById(id)
         .exec()
         .then(doc => {
-            doc.currentVisibility = (req.userData.userId == doc.creator._id || (doc.VIP != null && doc.VIP.includes(req.userData.userId)));
+            doc.currentVisibility = compVisib(doc, req);
             if (doc.currentVisibility) {
-                console.log(doc.currentVisibility)
                 Competition.update({_id: id}, {$set: updateOps, $addToSet: updateOpsArray})
                     .exec()
                     .then(result => {

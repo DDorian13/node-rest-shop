@@ -114,7 +114,10 @@ router.patch('/:photoId', checkAuth,(req, res, next) => {
     const updateOpsArray={};
     const ops = req.body;
     if (ops.propName === 'comment') {
-        ops.value.user = req.userData.userId;
+        const newComment = ({  user: req.userData.userId,
+            text: ops.value
+        });
+        ops.value = newComment;
     }
     if (ops.propName === 'categoryID' || ops.propName === 'comment' || ops.propName === 'competitionID') {
         updateOpsArray[ops.propName] = (ops.value);

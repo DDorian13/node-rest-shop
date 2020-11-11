@@ -81,7 +81,9 @@ router.patch('/:competitionId', checkAuth, (req, res, next) => {
     Competition.findById(id)
         .exec()
         .then(doc => {
+            doc.currentVisibility = (req.userData.userId == doc.creator._id || (doc.VIP != null && doc.VIP.includes(req.userData.userId)));
             if (doc.currentVisibility) {
+                console.log(doc.currentVisibility)
                 Competition.update({_id: id}, {$set: updateOps, $addToSet: updateOpsArray})
                     .exec()
                     .then(result => {

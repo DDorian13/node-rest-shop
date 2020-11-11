@@ -87,6 +87,27 @@ router.get('/:photoId', checkAuth, (req, res, next) => {
         });
 });
 
+router.get('/:photoId/comment', checkAuth, (req, res, next) => {
+    const id = req.params.photoId;
+    Photo.findById(id)
+        .select('_id comment')
+        .populate('comment', 'user text')
+        .populate('comment.user', 'email')
+        .exec()
+        .then(doc =>{
+            if(doc) {
+                res.status(200).send(doc);
+            } else{
+                res.status(404).json({messages: 'No valid entry found for provided ID'})
+            }
+
+        })
+        .catch(err=> {
+            console.log(err);
+            res.status(500).json({error: err});
+        });
+});
+
 router.patch('/:photoId', checkAuth,(req, res, next) => {
     const id = req.params.photoId;
     const updateOps={};

@@ -14,8 +14,9 @@ router.get('/', checkAuth, (req, res, next) => {
         .exec()
         .then(docs =>{
             res.header('Content-Range', 'Competition 0-' + docs.length + '/' + docs.length);
-            docs.forEach(doc =>
-                doc.currentVisibility = (req.userData.userId == doc.creator._id || doc.VIP.includes(req.userData.userId)))
+            docs.forEach(doc => {
+                doc.currentVisibility = (req.userData.userId == doc.creator._id || (doc.VIP != null && doc.VIP.includes(req.userData.userId)));
+            })
             res.status(200).json(docs);
         })
         .catch(err=>{
@@ -31,7 +32,7 @@ router.get('/:competitionId', checkAuth, (req, res, next) => {
         .populate({path:'photoList', select: 'title ownImage likes', options: {sort: {likes: -1}}})
         .exec()
         .then(doc => {
-            doc.currentVisibility = (req.userData.userId == doc.creator._id || doc.VIP.includes(req.userData.userId))
+            doc.currentVisibility = (req.userData.userId == doc.creator._id || (doc.VIP != null && doc.VIP.includes(req.userData.userId)));
             res.status(200).json(doc);
         })
         .catch(err=> {

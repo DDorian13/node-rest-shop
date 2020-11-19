@@ -10,8 +10,9 @@ const compVisib = require('../middleware/comp-visib');
 
 router.get('/', checkAuth, (req, res, next) => {
     Competition.find()
-        .select('name deadline creator currentVisibility')
+        .select('name deadline creator currentVisibility VIP')
         .populate('creator', 'email')
+        .populate('VIP', 'email')
         .exec()
         .then(docs =>{
             res.header('Content-Range', 'Competition 0-' + docs.length + '/' + docs.length);
@@ -29,9 +30,10 @@ router.get('/', checkAuth, (req, res, next) => {
 
 router.get('/:competitionId', checkAuth, (req, res, next) => {
     Competition.findById(req.params.competitionId)
-        .select('name deadline creator photoList currentVisibility')
+        .select('name deadline creator photoList currentVisibility VIP')
         .populate({path:'photoList', select: 'title ownImage likes', options: {sort: {likes: -1}}})
         .populate('creator', 'email')
+        .populate('VIP', 'email')
         .exec()
         .then(doc => {
             doc.currentVisibility = compVisib(doc, req);

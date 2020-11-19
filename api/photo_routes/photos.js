@@ -53,7 +53,8 @@ router.post('/', checkAuth, upload.single('ownImage'), (req, res, next) => {
         .then(result => {
             console.log(result);
             res.status(201).json({
-                message: 'Photo uploaded successfully'
+                message: 'Photo uploaded successfully',
+                _id: result._id
             });
         })
         .catch(err =>{

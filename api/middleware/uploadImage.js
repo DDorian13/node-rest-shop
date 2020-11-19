@@ -3,7 +3,6 @@ const multer=require('multer');
 const storage = multer.diskStorage({
     destination: function(req, file, cb) {
         cb(null, './uploads/');
-        console.log(file.originalname);
     },
     filename: function(req, file, cb) {
         const now = new Date().toISOString(); const date = now.replace(/:/g, '-'); cb(null, date + file.originalname);

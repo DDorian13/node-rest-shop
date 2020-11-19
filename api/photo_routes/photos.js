@@ -44,6 +44,7 @@ router.post('/', checkAuth, upload.single('ownImage'), (req, res, next) => {
                 _id: new mongoose.Types.ObjectId(),
                 title: req.body.title,
                 ownerID: req.userData.userId,
+                description: req.body.description
             });
             if (req.file !== undefined)
                 photo.ownImage = req.file.path;
@@ -66,7 +67,7 @@ router.post('/', checkAuth, upload.single('ownImage'), (req, res, next) => {
 router.get('/:photoId', checkAuth, (req, res, next) => {
     const id = req.params.photoId;
     Photo.findById(id)
-        .select('_id title ownImage likes comment ownerID upload categoryID competitionID')
+        .select('_id title ownImage description likes comment ownerID upload categoryID competitionID')
         .populate('comment', 'user text')
         .populate('ownerID', 'email')
         .populate('categoryID', 'name')
@@ -118,8 +119,6 @@ router.patch('/:photoId', checkAuth,(req, res, next) => {
             text: ops.value
         });
         ops.value = newComment;
-    }
-    if (ops.propName === 'categoryID' || ops.propName === 'comment' || ops.propName === 'competitionID') {
         updateOpsArray[ops.propName] = (ops.value);
     }
     else {

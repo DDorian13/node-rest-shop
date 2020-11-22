@@ -16,11 +16,34 @@ router.get('/', checkAuth, (req, res, next) => {
         .populate('VIP', 'email')
         .exec()
         .then(docs =>{
-            res.header('Content-Range', 'Competition 0-' + docs.length + '/' + docs.length);
             docs.forEach(doc => {
                 doc.currentVisibility = compVisib(doc, req);
-            })
-            res.status(200).json(docs);
+            });
+            const docsRange = [];
+            if (req.headers.hasOwnProperty('range')) {
+
+                var range = (req.headers.range).split('=');
+                range = range[1].split('-');
+                for (const j in range) {
+                    range[j] = parseInt(range[j]);
+                }
+
+                if (range[1] > docs.length - 1) {
+                    range[1] = docs.length - 1;
+                }
+                res.header('Content-Range', 'Competition '+ range[0] + '-' + range[1] + '/' +docs.length);
+                let i = 0;
+                console.log(docsRange);
+
+                for (let i = range[0]; i <= range[1]; ++i) {
+                    docsRange[i - range[0]] = docs[i];
+                    console.log(i);
+                }
+                res.status(200).json(docsRange);
+            } else {
+                res.header('Content-Range', 'Competition 0-' + docs.length + '/' + docs.length);
+                res.status(200).json(docs);
+            }
         })
         .catch(err=>{
             res.status(500).json({

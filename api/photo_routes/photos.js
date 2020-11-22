@@ -5,6 +5,7 @@ const upload = require('../middleware/uploadImage');
 const checkAuth = require('../middleware/check-auth');
 const Photo =require('../photo_models/photo');
 const User =require('../photo_models/user');
+const checkAdmin = require('../middleware/check-admin');
 
 router.get('/', checkAuth, (req, res, next) => {
     Photo.find()
@@ -140,7 +141,7 @@ router.patch('/:photoId', checkAuth,(req, res, next) => {
         });
 });
 
-router.delete('/:photoId', checkAuth, (req, res, next) => {
+router.delete('/:photoId', checkAuth, checkAdmin, (req, res, next) => {
     const id = req.params.photoId;
     Photo.remove({_id: id})
         .exec()
@@ -156,6 +157,29 @@ router.delete('/:photoId', checkAuth, (req, res, next) => {
             })
         });
 
+});
+
+
+
+router.put('/:photoId', checkAuth, checkAdmin, (req, res, next) => {
+    const id = req.params.photoId;
+    const updateOps = {};
+    const properties = Object.getOwnPropertyNames(req.body);
+    for (const currProp of properties)
+        updateOps[currProp] = req.body[currProp];
+    Photo.update({_id: id}, {$set: updateOps})
+        .exec()
+        .then(result => {
+            res.status(200).json({
+                message: 'Photo updated successfully'
+            });
+        })
+        .catch(err => {
+            console.log(err);
+            res.status(500).json({
+                error: err
+            })
+        })
 });
 
 module.exports = router;

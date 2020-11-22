@@ -7,8 +7,9 @@ const User =require('../photo_models/user');
 const Photo =require('../photo_models/photo');
 const upload=require('../middleware/uploadImage')
 const checkAuth = require('../middleware/check-auth');
+const checkAdmin = require('../middleware/check-admin');
 
-router.get('/'/*,checkAuth*/,(req, res, next) => {
+router.get('/', checkAuth, (req, res, next) => {
     Category.find()
         .select('name visibility creator limit')
         .populate('creator', 'email')
@@ -44,7 +45,7 @@ router.get('/:categoryId', checkAuth, (req, res, next) => {
         });
 });
 
-router.post('/', checkAuth, (req, res, next) => {
+router.post('/', checkAuth, checkAdmin, (req, res, next) => {
     User.findById(req.userData.userId)
         .then(user => {
             if(!user){
@@ -75,11 +76,12 @@ router.post('/', checkAuth, (req, res, next) => {
         });
 });
 
-router.patch('/:categoryId'/*,checkAuth*/, (req, res, next) => {
+router.patch('/:categoryId', checkAuth, checkAdmin, (req, res, next) => {
     const id = req.params.categoryId;
     const updateOps={};
     const updateOpsArray={};
     const ops = req.body
+    //TODO: limit check
     if (ops.propName === 'photoList')
         updateOpsArray[ops.propName] = ops.value;
     else
@@ -99,7 +101,7 @@ router.patch('/:categoryId'/*,checkAuth*/, (req, res, next) => {
         });
 });
 
-router.delete('/:categoryId', (req, res, next) => {
+router.delete('/:categoryId', checkAuth, checkAdmin, (req, res, next) => {
    Category.remove({_id: req.params.categoryId})
        .exec()
        .then(result=>{
@@ -113,6 +115,27 @@ router.delete('/:categoryId', (req, res, next) => {
                error: err
            })
        });
+});
+
+router.put('/:categoryId', checkAuth, checkAdmin, (req, res, next) => {
+    const id = req.params.categoryId;
+    const updateOps = {};
+    const properties = Object.getOwnPropertyNames(req.body);
+    for (const currProp of properties)
+        updateOps[currProp] = req.body[currProp];
+    Category.update({_id: id}, {$set: updateOps})
+        .exec()
+        .then(result => {
+            res.status(200).json({
+                message: 'Category updated successfully'
+            });
+        })
+        .catch(err => {
+            console.log(err);
+            res.status(500).json({
+                error: err
+            })
+        })
 });
 
 module.exports = router;

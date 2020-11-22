@@ -3,7 +3,7 @@ import decodeJwt from 'jwt-decode';
 const authProvider = {
     //login-ben username-t kell hasznalni, mert az a neve a felso beviteli mezonek
     login: ({ username, password }) =>  {
-        const request = new Request('http://localhost:3000/user/login', {
+        const request = new Request('http://localhost:3000/puser/login', {
             method: 'POST',
             body: JSON.stringify({ email: username, password: password }),
             headers: new Headers({ 'Content-Type': 'application/json' }),
@@ -18,12 +18,12 @@ const authProvider = {
             .then(({token}) => {
                 const decodedToken = decodeJwt(token);
                 localStorage.setItem('token', JSON.stringify(token));
-                localStorage.setItem('permissions', decodedToken.permission);
+                localStorage.setItem('permissions', decodedToken.permissions);
             });
     },
     getIdentity: () => {
-        const { id, fullName, avatar} = JSON.parse(localStorage.getItem('token'));
-        return { id, fullName, avatar};
+        const { email, userId, permissions } = JSON.parse(localStorage.getItem('token'));
+        return { email, userId, permissions };
     },
     logout: () => {
         localStorage.removeItem('token');

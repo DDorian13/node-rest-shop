@@ -13,7 +13,10 @@ const httpClient = (url, options = {}) => {
 const customKeysHash = {
     'products': '_id',
     'orders': '_id',
-    'users': '_id'
+    'users': '_id',
+    'categories': '_id',
+    'competitions': '_id',
+    'photos': '_id'
 }
 
 const dataProvider = customKeysDataProvider('http://localhost:5000', customKeysHash, {}, httpClient);

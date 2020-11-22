@@ -9,29 +9,9 @@ import OrderShow from './components/OrderShow';
 import authProvider from "./authentication/authProvider";
 import MyLoginPage from "./MyLoginPage";
 import myDataProvider from "./myDataProvider";
-
-//-------------------
-import customKeysDataProvider from 'ra-data-rest-client';
-import {fetchUtils} from "react-admin";
-
-// const httpClient = (url, options = {}) => {
-//     if (!options.headers) {
-//         options.headers = new Headers({ Accept: '*/*' });
-//     }
-//     const token = JSON.parse(localStorage.getItem('token'));
-//     options.headers.set('Authorization', `Bearer ${token}`);
-//     return fetchUtils.fetchJson(url, options);
-// };
-//
-// const customKeysHash = {
-//     'products': '_id',
-//     'orders': '_id',
-//     'users': '_id'
-// }
-//
-// const dataProvider = customKeysDataProvider('http://localhost:5000', customKeysHash, {}, httpClient);
-// const uDataProvider = myDataProvider(dataProvider);
-//-------------------
+import categories from './components/Category';
+import competitions from './components/Competition';
+import photos from './components/Photo';
 
 function App() {
     return <Admin authProvider={authProvider} dataProvider={myDataProvider}>
@@ -43,7 +23,10 @@ function App() {
         <Resource name='orders'
                   list={OrderList}
                   create = {OrderCreate}
-                  show = {OrderShow}/>
+                  show = {OrderShow}/>,
+        <Resource name='categories' {...categories} />,
+        <Resource name='competitions' {...competitions} />,
+        <Resource name='photos' {...photos} />
         ]}
     </Admin>
 }

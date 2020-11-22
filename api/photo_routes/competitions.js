@@ -7,6 +7,7 @@ const User =require('../photo_models/user');
 const Photo =require('../photo_models/photo');
 const checkAuth = require('../middleware/check-auth');
 const compVisib = require('../middleware/comp-visib');
+const checkAdmin = require('../middleware/check-admin');
 
 router.get('/', checkAuth, (req, res, next) => {
     Competition.find()
@@ -45,7 +46,7 @@ router.get('/:competitionId', checkAuth, (req, res, next) => {
         });
 });
 
-router.post('/', checkAuth, (req, res, next) => {
+router.post('/', checkAuth, checkAdmin, (req, res, next) => {
     User.findById(req.userData.userId)
         .then(user => {
             if(!user){
@@ -73,7 +74,7 @@ router.post('/', checkAuth, (req, res, next) => {
         });
 });
 
-router.patch('/:competitionId', checkAuth, (req, res, next) => {
+router.patch('/:competitionId', checkAuth, checkAdmin, (req, res, next) => {
     const id = req.params.competitionId;
     const updateOps={};
     const updateOpsArray={};
@@ -114,7 +115,7 @@ router.patch('/:competitionId', checkAuth, (req, res, next) => {
         });
 });
 
-router.delete('/:competitionId', checkAuth, (req, res, next) => {
+router.delete('/:competitionId', checkAuth, checkAdmin, (req, res, next) => {
     Competition.remove({_id: req.params.competitionId})
         .exec()
         .then(result=>{
@@ -128,6 +129,27 @@ router.delete('/:competitionId', checkAuth, (req, res, next) => {
                 error: err
             })
         });
+});
+
+router.put('/:competitionId', checkAuth, checkAdmin, (req, res, next) => {
+    const id = req.params.competitionId;
+    const updateOps = {};
+    const properties = Object.getOwnPropertyNames(req.body);
+    for (const currProp of properties)
+        updateOps[currProp] = req.body[currProp];
+    Competition.update({_id: id}, {$set: updateOps})
+        .exec()
+        .then(result => {
+            res.status(200).json({
+                message: 'Competition updated successfully'
+            });
+        })
+        .catch(err => {
+            console.log(err);
+            res.status(500).json({
+                error: err
+            })
+        })
 });
 
 module.exports = router;

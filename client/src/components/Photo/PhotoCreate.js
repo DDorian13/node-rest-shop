@@ -4,9 +4,9 @@ import {Create, SimpleForm, TextInput, ImageField, ImageInput} from 'react-admin
 const PhotoCreate = (props) => {
     return (
         <Create title = 'New Photo' {...props}>
-            <SimpleForm redirect='show'>
+            <SimpleForm>
                 <TextInput source='title'/>
-                <TextInput source='description'/>
+                <TextInput multiline={true} source='description'/>
                 <ImageInput label = 'Image'
                             source='ownImage'>
                     <ImageField source='src'/>

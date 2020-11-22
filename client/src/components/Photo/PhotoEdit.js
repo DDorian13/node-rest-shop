@@ -8,7 +8,7 @@ const PhotoEdit = (props) => {
             <SimpleForm>
                 <TextInput disabled source='id' />
                 <TextInput source='title' />
-                <TextInput source='description' />
+                <TextInput multiline={true} source='description' />
                 <ImageField source='ownImage'/>
                 <TextInput disabled label = 'Owner' source='ownerID.email'/>
                 <DateTimeInput disabled label = 'Uploaded at' source='upload'/>

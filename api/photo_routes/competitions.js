@@ -33,11 +33,8 @@ router.get('/', checkAuth, (req, res, next) => {
                 }
                 res.header('Content-Range', 'Competition '+ range[0] + '-' + range[1] + '/' +docs.length);
                 let i = 0;
-                console.log(docsRange);
-
                 for (let i = range[0]; i <= range[1]; ++i) {
                     docsRange[i - range[0]] = docs[i];
-                    console.log(i);
                 }
                 res.status(200).json(docsRange);
             } else {

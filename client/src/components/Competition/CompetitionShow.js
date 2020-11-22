@@ -7,7 +7,8 @@ import {
     BooleanField,
     SingleFieldList,
     ChipField,
-    ReferenceManyField
+    ReferenceArrayField,
+    ArrayField
 } from 'react-admin';
 
 const CompetitionShow = (props) => {
@@ -19,14 +20,14 @@ const CompetitionShow = (props) => {
                 <TextField source='creator.email' />
                 <DateField showTime={true} source='deadline' />
                 <BooleanField label = 'Visibility' source='currentVisibility'/>
-                <ReferenceManyField
+                <ReferenceArrayField
                     label='Photos in competition'
                     source='photoList'
                     reference='photos'>
-                    <SingleFieldList>
+                    <ArrayField>
                         <ChipField source='title'/>
-                    </SingleFieldList>
-                </ReferenceManyField>
+                    </ArrayField>
+                </ReferenceArrayField>
             </SimpleShowLayout>
         </Show>
     )

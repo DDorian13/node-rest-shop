@@ -90,6 +90,10 @@ router.post('/', checkAuth, upload.single('ownImage'), (req, res, next) => {
         })
         .catch(err =>{
             console.log(err);
+            console.log(req.body);
+            if (req.hasOwnProperty('file')) {
+                console.log(req.file);
+            }
             res.status(500).json({
                 error: err
             });

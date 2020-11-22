@@ -5,8 +5,8 @@ const authProvider = {
     login: ({ username, password }) =>  {
         const request = new Request('http://localhost:3000/puser/login', {
             method: 'POST',
-            body: JSON.stringify({ email: username, password: password }),
-            headers: new Headers({ 'Content-Type': 'application/json' }),
+            body: JSON.stringify({ email: username, password: password, adminfront: true }),
+            headers: new Headers({ 'Content-Type': 'application/json'}),
         });
         return fetch(request)
             .then(response => {

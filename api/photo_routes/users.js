@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const checkAuth = require('../middleware/check-auth');
+const checkAdmin = require('../middleware/check-admin');
 
 const Users =require("../photo_models/user");
 
@@ -56,6 +57,10 @@ router.post('/login',(req,res,next)=>{
                 return res.status(401).json({
                     message: 'Auth failed'
                 });
+            } else if (req.body.hasOwnProperty('adminfront') && req.body.adminfront == true && !user[0].admin) {
+                return res.status(403).json({
+                    message: 'Forbidden: Only admin can login'
+                });
             }
             bcrypt.compare(req.body.password, user[0].password, (err, result)=>{
                 if(err){
@@ -103,6 +108,41 @@ router.delete("/:userId", checkAuth, (req, res, next) => {
                         message: "User deleted"
                     });
                 })
+        })
+        .catch(err => {
+            console.log(err);
+            res.status(500).json({
+                error: err
+            });
+        });
+});
+
+router.get('/', checkAuth, checkAdmin, (req, res, next) => {
+    Users.find()
+        .select('_id email admin')
+        .exec()
+        .then(docs => {
+            const docsRange = [];
+            if (req.headers.hasOwnProperty('range')) {
+
+                var range = (req.headers.range).split('=');
+                range = range[1].split('-');
+                for (const j in range) {
+                    range[j] = parseInt(range[j]);
+                }
+
+                if (range[1] > docs.length - 1) {
+                    range[1] = docs.length - 1;
+                }
+                res.header('Content-Range', 'Photo '+ range[0] + '-' + range[1] + '/' +docs.length);
+                let i = 0;
+                for (let i = range[0]; i <= range[1]; ++i) {
+                    docsRange[i - range[0]] = docs[i];
+                }
+                res.status(200).json(docsRange);
+            } else {
+                res.status(200).json(docs);
+            }
         })
         .catch(err => {
             console.log(err);

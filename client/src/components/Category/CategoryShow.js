@@ -6,9 +6,11 @@ import {
     NumberField,
     BooleanField,
     ReferenceManyField,
+    ReferenceArrayField,
     ReferenceField,
     ChipField,
-    SingleFieldList
+    SingleFieldList,
+    ArrayField
 } from 'react-admin';
 
 const CategoryShow = (props) => {
@@ -20,14 +22,19 @@ const CategoryShow = (props) => {
                 <TextField source='creator.email' />
                 <NumberField source='limit' />
                 <BooleanField source='visibility'/>
-                <ReferenceManyField
+                <ArrayField source={'photoList'}>
+                    <SingleFieldList>
+                        <ChipField source={'title'}/>
+                    </SingleFieldList>
+                </ArrayField>
+                <ReferenceArrayField
                     label='Photos in category'
                     source='photoList'
                     reference='photos'>
                     <SingleFieldList>
                         <ChipField source='title'/>
                     </SingleFieldList>
-                </ReferenceManyField>
+                </ReferenceArrayField>
             </SimpleShowLayout>
         </Show>
     )

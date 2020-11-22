@@ -21,11 +21,11 @@ const CategoryEdit = (props) => {
                 <BooleanInput source='visibility' />
                 <ReferenceArrayInput
                     label='Photos in category'
-                    source="photoList"
-                    reference='photos'>
+                    source='photoList'
+                    reference='photos'
+                    allowEmpty={true}>
                     <SelectArrayInput
                         multiple={true}
-                        allowNull={true}
                         source='photoList'
                         optionText='title'
                         optionValue='id'

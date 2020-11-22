@@ -39,7 +39,7 @@ const PhotoGrid = () => {
                     <CardActions style={{ textAlign: 'right' }}>
                         <EditButton resource="photos" basePath={basePath} record={data[id]} />
                         <ShowButton resource="photos" basePath={basePath} record={data[id]} />
-                        <DeleteButton resource="photos" basePath={basePath} record={data[id]} />
+                        <DeleteButton resource="photos" basePath={basePath} record={data[id]} redirect={'list'}/>
                     </CardActions>
                 </Card>
             )}

@@ -8,6 +8,7 @@ const Photo =require('../photo_models/photo');
 const upload=require('../middleware/uploadImage')
 const checkAuth = require('../middleware/check-auth');
 const checkAdmin = require('../middleware/check-admin');
+const categoryLimit = require('../middleware/category-limit');
 
 router.get('/', checkAuth, (req, res, next) => {
     Category.find()
@@ -97,12 +98,11 @@ router.post('/', checkAuth, checkAdmin, (req, res, next) => {
         });
 });
 
-router.patch('/:categoryId', checkAuth, checkAdmin, (req, res, next) => {
+router.patch('/:categoryId', checkAuth, checkAdmin, categoryLimit, (req, res, next) => {
     const id = req.params.categoryId;
     const updateOps={};
     const updateOpsArray={};
-    const ops = req.body
-    //TODO: limit check
+    const ops = req.body;
     if (ops.propName === 'photoList')
         updateOpsArray[ops.propName] = ops.value;
     else
@@ -138,7 +138,7 @@ router.delete('/:categoryId', checkAuth, checkAdmin, (req, res, next) => {
        });
 });
 
-router.put('/:categoryId', checkAuth, checkAdmin, (req, res, next) => {
+router.put('/:categoryId', checkAuth, checkAdmin, categoryLimit, (req, res, next) => {
     const id = req.params.categoryId;
     const updateOps = {};
     const properties = Object.getOwnPropertyNames(req.body);

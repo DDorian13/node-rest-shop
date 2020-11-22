@@ -7,6 +7,7 @@ const User =require('../photo_models/user');
 const Photo =require('../photo_models/photo');
 const checkAuth = require('../middleware/check-auth');
 const compVisib = require('../middleware/comp-visib');
+const compDeadline = require('../middleware/comp-deadline');
 const checkAdmin = require('../middleware/check-admin');
 
 router.get('/', checkAuth, (req, res, next) => {
@@ -66,7 +67,7 @@ router.get('/:competitionId', checkAuth, (req, res, next) => {
         });
 });
 
-router.post('/', checkAuth, checkAdmin, (req, res, next) => {
+router.post('/', checkAuth, checkAdmin, compDeadline, (req, res, next) => {
     User.findById(req.userData.userId)
         .then(user => {
             if(!user){
@@ -94,7 +95,7 @@ router.post('/', checkAuth, checkAdmin, (req, res, next) => {
         });
 });
 
-router.patch('/:competitionId', checkAuth, checkAdmin, (req, res, next) => {
+router.patch('/:competitionId', checkAuth, checkAdmin, compDeadline, (req, res, next) => {
     const id = req.params.competitionId;
     const updateOps={};
     const updateOpsArray={};
@@ -151,7 +152,7 @@ router.delete('/:competitionId', checkAuth, checkAdmin, (req, res, next) => {
         });
 });
 
-router.put('/:competitionId', checkAuth, checkAdmin, (req, res, next) => {
+router.put('/:competitionId', checkAuth, checkAdmin, compDeadline, (req, res, next) => {
     const id = req.params.competitionId;
     const updateOps = {};
     const properties = Object.getOwnPropertyNames(req.body);

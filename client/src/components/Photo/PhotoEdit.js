@@ -15,7 +15,7 @@ const PhotoEdit = (props) => {
                 <ArrayInput label='Comments' source='comment'>
                     <SimpleFormIterator disableRemove={true}>
                         <TextInput disabled label='User' source='user.email'/>
-                        <TextInput disabled label='comment' source='text'/>
+                        <TextInput disabled label='Comment' source='text'/>
                     </SimpleFormIterator>
                 </ArrayInput>
             </SimpleForm>

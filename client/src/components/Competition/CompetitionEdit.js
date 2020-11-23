@@ -8,7 +8,8 @@ import {
     SelectArrayInput,
     ReferenceArrayInput,
     SelectInput,
-    ReferenceInput
+    ReferenceInput,
+    ArrayInput
 } from 'react-admin';
 
 const CompetitionEdit = (props) => {
@@ -32,18 +33,18 @@ const CompetitionEdit = (props) => {
                         optionValue='id'
                     />
                 </ReferenceArrayInput>
-                <ReferenceInput
+                <ReferenceArrayInput
                     label='VIP'
                     source="VIP"
-                    reference='products'
+                    reference='puser'
                     allowEmpty={true}
                     multiple={true}>
-                    <SelectInput
+                    <SelectArrayInput
                         source='VIP'
-                        optionText='name'
+                        optionText='email'
                         optionValue='id'
                     />
-                </ReferenceInput>
+                </ReferenceArrayInput>
             </SimpleForm>
         </Edit>
     )

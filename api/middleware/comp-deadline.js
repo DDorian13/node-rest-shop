@@ -8,7 +8,7 @@ module.exports = (req, res, next) => {
             if (doc.deadline > Date.now()) {
                 next();
             } else {
-                res.status(403).json({
+                res.status(404).json({
                     message: 'Forbidden: Competition has ended'
                 });
             }

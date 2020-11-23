@@ -22,19 +22,13 @@ const CategoryShow = (props) => {
                 <TextField source='creator.email' />
                 <NumberField source='limit' />
                 <BooleanField source='visibility'/>
-                <ArrayField source={'photoList'}>
-                    <SingleFieldList>
-                        <ChipField source={'title'}/>
-                    </SingleFieldList>
-                </ArrayField>
-                <ReferenceArrayField
-                    label='Photos in category'
+                <ArrayField
                     source='photoList'
-                    reference='photos'>
+                    label='Photos in category'>
                     <SingleFieldList>
                         <ChipField source='title'/>
                     </SingleFieldList>
-                </ReferenceArrayField>
+                </ArrayField>
             </SimpleShowLayout>
         </Show>
     )

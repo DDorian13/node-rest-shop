@@ -16,14 +16,6 @@ import users from './components/User';
 function App() {
     return <Admin authProvider={authProvider} dataProvider={myDataProvider}>
         {permissions => [
-        <Resource name='products'
-                  list={ProductList}
-                  create = {ProductCreate}
-                  edit = {ProductEdit}/>,
-        <Resource name='orders'
-                  list={OrderList}
-                  create = {OrderCreate}
-                  show = {OrderShow}/>,
         <Resource name='categories' {...categories} />,
         <Resource name='competitions' {...competitions} />,
         <Resource name='photos' {...photos} />,

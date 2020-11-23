@@ -1,5 +1,7 @@
 import UserList from './UserList';
+import PeopleIcon from '@material-ui/icons/People'
 
 export default {
-    list: UserList
+    list: UserList,
+    icon: PeopleIcon
 };

@@ -20,14 +20,19 @@ const CompetitionShow = (props) => {
                 <TextField source='creator.email' />
                 <DateField showTime={true} source='deadline' />
                 <BooleanField label = 'Visibility' source='currentVisibility'/>
-                <ReferenceArrayField
+                <ArrayField label='VIP members' source='VIP'>
+                    <SingleFieldList>
+                        <ChipField source='email'/>
+                    </SingleFieldList>
+                </ArrayField>
+                <ArrayField
                     label='Photos in competition'
                     source='photoList'
                     reference='photos'>
-                    <ArrayField>
+                    <SingleFieldList>
                         <ChipField source='title'/>
-                    </ArrayField>
-                </ReferenceArrayField>
+                    </SingleFieldList>
+                </ArrayField>
             </SimpleShowLayout>
         </Show>
     )

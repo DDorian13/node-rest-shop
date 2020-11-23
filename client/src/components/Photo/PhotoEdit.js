@@ -2,7 +2,7 @@ import React from 'react';
 import {Edit, SimpleForm, TextInput, DateTimeInput, ImageField, ArrayInput, SimpleFormIterator} from 'react-admin';
 import authProvider from '../../authentication/authProvider';
 
-const PhotoEdit = (props) => {
+const PhotoEdit = ({permissions, ...props}) => {
     return (
         <Edit title = 'Edit Photo' {...props}>
             <SimpleForm>

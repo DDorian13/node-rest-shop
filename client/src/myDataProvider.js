@@ -16,7 +16,8 @@ const customKeysHash = {
     'users': '_id',
     'categories': '_id',
     'competitions': '_id',
-    'photos': '_id'
+    'photos': '_id',
+    'puser': '_id'
 }
 
 const dataProvider = customKeysDataProvider('http://localhost:5000', customKeysHash, {}, httpClient);

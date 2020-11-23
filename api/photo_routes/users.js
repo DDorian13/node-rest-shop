@@ -55,7 +55,7 @@ router.post('/login',(req,res,next)=>{
         .then(user => {
             if(user.length<1){
                 return res.status(401).json({
-                    message: 'Auth failed'
+                    message: 'Wrong email or password'
                 });
             } else if (req.body.hasOwnProperty('adminfront') && req.body.adminfront == true && !user[0].admin) {
                 return res.status(403).json({
@@ -65,7 +65,7 @@ router.post('/login',(req,res,next)=>{
             bcrypt.compare(req.body.password, user[0].password, (err, result)=>{
                 if(err){
                     return res.status(401).json({
-                        message: 'Auth failed'
+                        message: 'Wrong email or password'
                     });
                 }
                 if(result){

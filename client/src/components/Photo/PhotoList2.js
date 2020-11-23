@@ -48,7 +48,7 @@ const PhotoGrid = () => {
 };
 
 const PhotoList2 = (props) => (
-    <List title="All photos" {...props}>
+    <List {...props}>
         <PhotoGrid />
     </List>
 );

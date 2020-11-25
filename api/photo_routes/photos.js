@@ -6,6 +6,7 @@ const checkAuth = require('../middleware/check-auth');
 const Photo =require('../photo_models/photo');
 const User =require('../photo_models/user');
 const checkAdmin = require('../middleware/check-admin');
+const getByFilter = require('../middleware/getByIdFilter');
 
 router.get('/', checkAuth, (req, res, next) => {
     Photo.find()
@@ -13,6 +14,7 @@ router.get('/', checkAuth, (req, res, next) => {
         .populate('ownerID', 'email')
         .exec()
         .then(docs => {
+            docs = getByFilter(docs, req);
             const docsRange = [];
             if (req.headers.hasOwnProperty('range')) {
 
@@ -195,8 +197,16 @@ router.put('/:photoId', checkAuth, checkAdmin, (req, res, next) => {
     const id = req.params.photoId;
     const updateOps = {};
     const properties = Object.getOwnPropertyNames(req.body);
-    for (const currProp of properties)
+    for (const currProp of properties) {
         updateOps[currProp] = req.body[currProp];
+        if (currProp === 'comment') {
+            for (var comment in req.body[currProp]) {
+                if (!req.body[currProp][comment].hasOwnProperty('user')) {
+                    req.body[currProp][comment]['user'] = req.userData.userId;
+                }
+            }
+        }
+    }
     Photo.update({_id: id}, {$set: updateOps})
         .exec()
         .then(result => {

@@ -5,9 +5,10 @@ import {
     TextInput,
     NumberInput,
     BooleanInput,
-    SelectArrayInput,
-    ReferenceArrayInput,
-    ReferenceInput
+    ReferenceInput,
+    ArrayInput,
+    SimpleFormIterator,
+    SelectInput
 } from 'react-admin';
 
 const CategoryEdit = (props) => {
@@ -19,18 +20,15 @@ const CategoryEdit = (props) => {
                 <TextInput disabled label = 'Creator' source='creator.email' />
                 <NumberInput source='limit' />
                 <BooleanInput source='visibility' />
-                <ReferenceArrayInput
-                    label='Photos in category'
-                    source='photoList'
-                    reference='photos'
-                    allowEmpty={true}>
-                    <SelectArrayInput
-                        multiple={true}
-                        source='photoList'
-                        optionText='title'
-                        optionValue='id'
-                    />
-                </ReferenceArrayInput>
+
+                <ArrayInput label='Photos in category' source='photoList'>
+                    <SimpleFormIterator>
+                        <ReferenceInput label='Selected photo' source='_id' reference='photos'>
+                            <SelectInput optionText='title'/>
+                        </ReferenceInput>
+                    </SimpleFormIterator>
+                </ArrayInput>
+
             </SimpleForm>
         </Edit>
     )

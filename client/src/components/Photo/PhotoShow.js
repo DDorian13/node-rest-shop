@@ -1,5 +1,5 @@
 import React from 'react';
-import {Show, SimpleShowLayout, TextField, DateField, ImageField, ArrayField, Datagrid} from 'react-admin';
+import {Show, SimpleShowLayout, TextField, DateField, ImageField, ArrayField, Datagrid, NumberField} from 'react-admin';
 
 const PhotoShow = (props) => {
     return (
@@ -9,6 +9,7 @@ const PhotoShow = (props) => {
                 <TextField source='title' />
                 <TextField source='description' />
                 <ImageField label='Image' source='ownImage'/>
+                <NumberField label='Likes' source='likes'/>
                 <TextField label = 'Owner' source='ownerID.email'/>
                 <DateField showTime={true} label = 'Uploaded at' source='upload'/>
                 <ArrayField label='Comments' source='comment'>

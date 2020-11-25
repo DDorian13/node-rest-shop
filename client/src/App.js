@@ -1,11 +1,5 @@
 import React from 'react';
 import { Admin, Resource } from 'react-admin';
-import ProductList from './components/ProductList';
-import ProductCreate from './components/ProductCreate';
-import ProductEdit from './components/ProductEdit';
-import OrderList from './components/OrderList';
-import OrderCreate from './components/OrderCreate';
-import OrderShow from './components/OrderShow';
 import authProvider from "./authentication/authProvider";
 import myDataProvider from "./myDataProvider";
 import categories from './components/Category';

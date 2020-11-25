@@ -95,7 +95,7 @@ router.post('/', checkAuth, checkAdmin, compDeadline, (req, res, next) => {
         });
 });
 
-router.patch('/:competitionId', checkAuth, checkAdmin, compDeadline, (req, res, next) => {
+router.patch('/:competitionId', checkAuth, compDeadline, (req, res, next) => {
     const id = req.params.competitionId;
     const updateOps={};
     const updateOpsArray={};
@@ -152,7 +152,7 @@ router.delete('/:competitionId', checkAuth, checkAdmin, (req, res, next) => {
         });
 });
 
-router.put('/:competitionId', checkAuth, checkAdmin, compDeadline, (req, res, next) => {
+router.put('/:competitionId', checkAuth, compDeadline, (req, res, next) => {
     const id = req.params.competitionId;
     const updateOps = {};
     const properties = Object.getOwnPropertyNames(req.body);

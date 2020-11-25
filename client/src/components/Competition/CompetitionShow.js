@@ -7,7 +7,7 @@ import {
     BooleanField,
     SingleFieldList,
     ChipField,
-    ReferenceArrayField,
+    ReferenceField,
     ArrayField
 } from 'react-admin';
 
@@ -20,19 +20,27 @@ const CompetitionShow = (props) => {
                 <TextField source='creator.email' />
                 <DateField showTime={true} source='deadline' />
                 <BooleanField label = 'Visibility' source='currentVisibility'/>
-                <ArrayField label='VIP members' source='VIP'>
-                    <SingleFieldList>
-                        <ChipField source='email'/>
-                    </SingleFieldList>
-                </ArrayField>
+
                 <ArrayField
                     label='Photos in competition'
-                    source='photoList'
-                    reference='photos'>
+                    source='photoList'>
                     <SingleFieldList>
-                        <ChipField source='title'/>
+                        <ReferenceField source='_id' reference='photos'>
+                            <ChipField source='title'/>
+                        </ReferenceField>
                     </SingleFieldList>
                 </ArrayField>
+
+                <ArrayField
+                    label='VIP members'
+                    source='VIP'>
+                    <SingleFieldList>
+                        <ReferenceField source='_id' reference='puser'>
+                            <ChipField source='email'/>
+                        </ReferenceField>
+                    </SingleFieldList>
+                </ArrayField>
+
             </SimpleShowLayout>
         </Show>
     )

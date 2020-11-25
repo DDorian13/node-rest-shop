@@ -11,9 +11,6 @@ const httpClient = (url, options = {}) => {
 };
 
 const customKeysHash = {
-    'products': '_id',
-    'orders': '_id',
-    'users': '_id',
     'categories': '_id',
     'competitions': '_id',
     'photos': '_id',
@@ -25,41 +22,22 @@ const dataProvider = customKeysDataProvider('http://localhost:5000', customKeysH
 const myDataProvider = {
     ...dataProvider,
     create: (resource, params) => {
-        if ((resource !== 'products' || !params.data.productImage)
-        && (resource !== 'photos' || !params.data.ownImage)) {
+        if (resource !== 'photos' || !params.data.ownImage) {
             // fallback to the default implementation
             return dataProvider.create(resource, params);
         }
+        let formData = new FormData();
 
-        if (resource === 'products') {
-            let formData = new FormData();
+        formData.append('title', params.data.title);
+        formData.append('description', params.data.description);
+        formData.append('ownImage', params.data.ownImage.rawFile);
 
-            formData.append('title', params.data.title);
-            formData.append('year', params.data.year);
-            formData.append('author', params.data.author);
-            formData.append('desc', params.data.desc);
-            formData.append('productImage', params.data.productImage.rawFile);
-
-            return httpClient(`http://localhost:5000/products`, {
-                method: 'POST',
-                body: formData,
-            }).then(({json}) => ({
-                data: {...params.data, id: json.id},
-            }));
-        } else if (resource === 'photos') {
-            let formData = new FormData();
-
-            formData.append('title', params.data.title);
-            formData.append('description', params.data.description);
-            formData.append('ownImage', params.data.ownImage.rawFile);
-
-            return httpClient(`http://localhost:5000/photos`, {
-                method: 'POST',
-                body: formData,
-            }).then(({json}) => ({
-                data: {...params.data, id: json.id},
-            }));
-        }
+        return httpClient(`http://localhost:5000/photos`, {
+            method: 'POST',
+            body: formData,
+        }).then(({json}) => ({
+            data: {...params.data, id: json.id},
+        }));
     }
 };
 

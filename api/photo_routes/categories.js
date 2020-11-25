@@ -86,9 +86,7 @@ router.post('/', checkAuth, checkAdmin, (req, res, next) => {
         })
         .then(result => {
             console.log(result);
-            res.status(201).json({
-                message: "Category created successfully"
-            });
+            res.status(201).json(result);
         })
         .catch(err =>{
             console.log(err);
@@ -98,7 +96,7 @@ router.post('/', checkAuth, checkAdmin, (req, res, next) => {
         });
 });
 
-router.patch('/:categoryId', checkAuth, checkAdmin, categoryLimit, (req, res, next) => {
+router.patch('/:categoryId', checkAuth, categoryLimit, (req, res, next) => {
     const id = req.params.categoryId;
     const updateOps={};
     const updateOpsArray={};
@@ -138,7 +136,7 @@ router.delete('/:categoryId', checkAuth, checkAdmin, (req, res, next) => {
        });
 });
 
-router.put('/:categoryId', checkAuth, checkAdmin, categoryLimit, (req, res, next) => {
+router.put('/:categoryId', checkAuth, categoryLimit, (req, res, next) => {
     const id = req.params.categoryId;
     const updateOps = {};
     const properties = Object.getOwnPropertyNames(req.body);

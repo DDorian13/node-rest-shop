@@ -5,6 +5,7 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const checkAuth = require('../middleware/check-auth');
 const checkAdmin = require('../middleware/check-admin');
+const getByFilter = require('../middleware/getByIdFilter');
 
 const Users =require("../photo_models/user");
 
@@ -122,6 +123,7 @@ router.get('/', checkAuth, checkAdmin, (req, res, next) => {
         .select('_id email admin')
         .exec()
         .then(docs => {
+            docs = getByFilter(docs, req);
             const docsRange = [];
             if (req.headers.hasOwnProperty('range')) {
 

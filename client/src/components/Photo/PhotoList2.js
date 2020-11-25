@@ -1,7 +1,9 @@
 import React from 'react';
-import { useListContext, List, TextField, ImageField, EditButton, ShowButton, DeleteButton } from 'react-admin';
-import { Card, CardActions, CardContent, CardHeader, Avatar } from '@material-ui/core';
+import { useListContext, List, TextField, EditButton, ShowButton, DeleteWithConfirmButton, Button } from 'react-admin';
+import { Card, CardActions, CardContent, CardHeader, Avatar, Icon } from '@material-ui/core';
 import {makeStyles} from "@material-ui/styles";
+
+import LikeIcon from '@material-ui/icons/ThumbUp'
 
 const cardStyle = {
     width: '20em',
@@ -31,7 +33,7 @@ const PhotoGrid = () => {
                 <Card key={id} style={cardStyle}>
                     <CardHeader
                         title={<TextField record={data[id]} source="title" />}
-                        subheader={<TextField showTime={true} label='Owner' record={data[id]} source="owner" />}
+                        subheader={<TextField label='Owner' record={data[id]} source="owner" />}
                     />
                     <CardContent style={{textAlign: 'center'}}>
                         <img src={data[id].ownImage} alt="" className={classes.img} />
@@ -39,7 +41,7 @@ const PhotoGrid = () => {
                     <CardActions style={{ textAlign: 'right' }}>
                         <EditButton resource="photos" basePath={basePath} record={data[id]} />
                         <ShowButton resource="photos" basePath={basePath} record={data[id]} />
-                        <DeleteButton resource="photos" basePath={basePath} record={data[id]} redirect={'list'}/>
+                        <DeleteWithConfirmButton resource="photos" basePath={basePath} record={data[id]} redirect={'list'}/>
                     </CardActions>
                 </Card>
             )}

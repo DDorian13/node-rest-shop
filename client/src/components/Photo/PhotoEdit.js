@@ -1,6 +1,5 @@
 import React from 'react';
-import {Edit, SimpleForm, TextInput, DateTimeInput, ImageField, ArrayInput, SimpleFormIterator} from 'react-admin';
-import authProvider from '../../authentication/authProvider';
+import {Edit, SimpleForm, TextInput, DateTimeInput, ImageField, ArrayInput, SimpleFormIterator, NumberInput} from 'react-admin';
 
 const PhotoEdit = ({permissions, ...props}) => {
     return (
@@ -10,6 +9,7 @@ const PhotoEdit = ({permissions, ...props}) => {
                 <TextInput source='title' />
                 <TextInput multiline={true} source='description' />
                 <ImageField source='ownImage'/>
+                <NumberInput source='likes' label='Likes'/>
                 <TextInput disabled label = 'Owner' source='ownerID.email'/>
                 <DateTimeInput disabled label = 'Uploaded at' source='upload'/>
                 <ArrayInput label='Comments' source='comment'>

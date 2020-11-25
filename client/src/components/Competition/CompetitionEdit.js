@@ -5,11 +5,10 @@ import {
     TextInput,
     DateTimeInput,
     BooleanInput,
-    SelectArrayInput,
-    ReferenceArrayInput,
-    SelectInput,
+    ArrayInput,
+    SimpleFormIterator,
     ReferenceInput,
-    ArrayInput
+    SelectInput
 } from 'react-admin';
 
 const CompetitionEdit = (props) => {
@@ -21,30 +20,23 @@ const CompetitionEdit = (props) => {
                 <TextInput disabled label = 'Creator' source='creator.email' />
                 <DateTimeInput source='deadline' />
                 <BooleanInput disabled label = 'Visibility' source='currentVisibility'/>
-                <ReferenceArrayInput
-                    label='Photos in competition'
-                    source="photoList"
-                    reference='photos'>
-                    <SelectArrayInput
-                        multiple={true}
-                        allowNull={true}
-                        source='photoList'
-                        optionText='title'
-                        optionValue='id'
-                    />
-                </ReferenceArrayInput>
-                <ReferenceArrayInput
-                    label='VIP'
-                    source="VIP"
-                    reference='puser'
-                    allowEmpty={true}
-                    multiple={true}>
-                    <SelectArrayInput
-                        source='VIP'
-                        optionText='email'
-                        optionValue='id'
-                    />
-                </ReferenceArrayInput>
+
+                <ArrayInput label='Photos in competition' source='photoList'>
+                    <SimpleFormIterator>
+                        <ReferenceInput label='Selected photo' source='_id' reference='photos'>
+                            <SelectInput optionText='title'/>
+                        </ReferenceInput>
+                    </SimpleFormIterator>
+                </ArrayInput>
+
+                <ArrayInput label='VIP members' source='VIP'>
+                    <SimpleFormIterator>
+                        <ReferenceInput label='Selected member' source='_id' reference='puser'>
+                            <SelectInput optionText='email'/>
+                        </ReferenceInput>
+                    </SimpleFormIterator>
+                </ArrayInput>
+
             </SimpleForm>
         </Edit>
     )

@@ -1,5 +1,5 @@
 import React from 'react';
-import {List, Datagrid, TextField, BooleanField, EditButton, ShowButton, DeleteButton, DateField, Pagination} from 'react-admin';
+import {List, Datagrid, TextField, BooleanField, EditButton, ShowButton, DeleteWithConfirmButton, DateField} from 'react-admin';
 
 const CompetitionList = (props) => {
     return <List {...props}>
@@ -10,7 +10,7 @@ const CompetitionList = (props) => {
             <BooleanField label = 'Visibility' source = 'currentVisibility'/>
             <EditButton basePath = '/competitions'/>
             <ShowButton basePath = '/competitions'/>
-            <DeleteButton basePath = '/competitions'/>
+            <DeleteWithConfirmButton basePath = '/competitions'/>
         </Datagrid>
     </List>
 };

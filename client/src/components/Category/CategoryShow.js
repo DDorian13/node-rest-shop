@@ -5,8 +5,6 @@ import {
     TextField,
     NumberField,
     BooleanField,
-    ReferenceManyField,
-    ReferenceArrayField,
     ReferenceField,
     ChipField,
     SingleFieldList,
@@ -22,13 +20,17 @@ const CategoryShow = (props) => {
                 <TextField source='creator.email' />
                 <NumberField source='limit' />
                 <BooleanField source='visibility'/>
+
                 <ArrayField
-                    source='photoList'
-                    label='Photos in category'>
+                    label='Photos in category testing'
+                    source='photoList'>
                     <SingleFieldList>
-                        <ChipField source='title'/>
+                        <ReferenceField source='_id' reference='photos'>
+                            <ChipField source='title'/>
+                        </ReferenceField>
                     </SingleFieldList>
                 </ArrayField>
+
             </SimpleShowLayout>
         </Show>
     )

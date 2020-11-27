@@ -6,7 +6,7 @@ const CategoryCreate = (props) => {
         <Create title = 'New Category' {...props}>
             <SimpleForm redirect='show'>
                 <TextInput source='name' validate={required('Specify a name!')}/>
-                <BooleanInput source='visibility' />
+                <BooleanInput label='Visible' source='visibility' />
                 <NumberInput source='limit' />
             </SimpleForm>
         </Create>

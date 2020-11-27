@@ -56,10 +56,11 @@ router.get('/:categoryId', checkAuth, (req, res, next) => {
         .then(doc => {
             if(doc.visibility || req.userData.userId == doc.creator._id) {
                 res.status(200).json(doc);
-            } else
+            } else {
                 res.status(404).json({
                     message: 'No valid entry found for provided ID'
                 })
+            }
         })
         .catch(err=> {
             console.log(err);

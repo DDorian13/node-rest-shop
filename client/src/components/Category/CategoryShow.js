@@ -13,7 +13,7 @@ import {
 
 const CategoryShow = (props) => {
     return (
-        <Show {...props}>
+        <Show {...props} title='Show Category'>
             <SimpleShowLayout>
                 <TextField source='id' />
                 <TextField source='name' />

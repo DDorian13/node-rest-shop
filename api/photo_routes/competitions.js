@@ -123,7 +123,7 @@ router.patch('/:competitionId', checkAuth, compDeadline, (req, res, next) => {
                         })
                     });
             } else {
-                res.status(403).json({
+                res.status(404).json({
                     message: "Access not permitted"
                 })
             }
@@ -158,12 +158,29 @@ router.put('/:competitionId', checkAuth, compDeadline, (req, res, next) => {
     const properties = Object.getOwnPropertyNames(req.body);
     for (const currProp of properties)
         updateOps[currProp] = req.body[currProp];
-    Competition.update({_id: id}, {$set: updateOps})
+    Competition.findById(id)
         .exec()
-        .then(result => {
-            res.status(200).json({
-                message: 'Competition updated successfully'
-            });
+        .then(doc => {
+            doc.currentVisibility = compVisib(doc, req);
+            if (doc.currentVisibility) {
+                Competition.update({_id: id}, {$set: updateOps})
+                    .exec()
+                    .then(result => {
+                        res.status(200).json({
+                            message: 'Competition updated successfully'
+                        });
+                    })
+                    .catch(err => {
+                        console.log(err);
+                        res.status(500).json({
+                            error: err
+                        })
+                    })
+            } else {
+                res.status(404).json({
+                    message: 'Access not permitted'
+                });
+            }
         })
         .catch(err => {
             console.log(err);

@@ -13,13 +13,13 @@ import {
 
 const CompetitionShow = (props) => {
     return (
-        <Show {...props}>
+        <Show {...props} title='Show Competition'>
             <SimpleShowLayout>
                 <TextField source='id' />
                 <TextField source='name' />
                 <TextField source='creator.email' />
                 <DateField showTime={true} source='deadline' />
-                <BooleanField label = 'Visibility' source='currentVisibility'/>
+                <BooleanField label = 'Accessibility' source='currentVisibility'/>
 
                 <ArrayField
                     label='Photos in competition'

@@ -3,7 +3,7 @@ import {Show, SimpleShowLayout, TextField, DateField, ImageField, ArrayField, Da
 
 const PhotoShow = (props) => {
     return (
-        <Show {...props}>
+        <Show {...props} title='Show Photo'>
             <SimpleShowLayout>
                 <TextField source='id' />
                 <TextField source='title' />

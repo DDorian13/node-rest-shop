@@ -7,7 +7,7 @@ const CompetitionList = (props) => {
             <TextField source = 'name' />
             <TextField label = 'Creator' source = 'creator.email' />
             <DateField showTime={true} source = 'deadline'/>
-            <BooleanField label = 'Visibility' source = 'currentVisibility'/>
+            <BooleanField label = 'Accessibility' source = 'currentVisibility'/>
             <EditButton basePath = '/competitions'/>
             <ShowButton basePath = '/competitions'/>
             <DeleteWithConfirmButton basePath = '/competitions'/>

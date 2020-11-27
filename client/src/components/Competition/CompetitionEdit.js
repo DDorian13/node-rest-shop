@@ -19,7 +19,7 @@ const CompetitionEdit = (props) => {
                 <TextInput source='name' />
                 <TextInput disabled label = 'Creator' source='creator.email' />
                 <DateTimeInput source='deadline' />
-                <BooleanInput disabled label = 'Visibility' source='currentVisibility'/>
+                <BooleanInput disabled label = 'Accessibility' source='currentVisibility'/>
 
                 <ArrayInput label='Photos in competition' source='photoList'>
                     <SimpleFormIterator>

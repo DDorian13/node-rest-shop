@@ -67,7 +67,7 @@ router.get('/:competitionId', checkAuth, (req, res, next) => {
         });
 });
 
-router.post('/', checkAuth, checkAdmin, compDeadline, (req, res, next) => {
+router.post('/', checkAuth, checkAdmin, (req, res, next) => {
     User.findById(req.userData.userId)
         .then(user => {
             if(!user){

@@ -1,2 +1,4 @@
 # node-rest-shop
- Backend alkalmazás egy Android könyvtárhoz REST API-val
+ Backend API for Android photo portal with REST
+ Frontend with react-admin, on port 5000
+ You can run it with this command: npm run dev
